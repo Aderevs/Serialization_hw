@@ -4,7 +4,9 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Person person = new Person("Klarc", "Stadnichuk", 19);
+            person.SerializeToXml("person.xml");
+            Console.WriteLine(Person.DeserializeFromXml("person.xml"));
         }
     }
 }
