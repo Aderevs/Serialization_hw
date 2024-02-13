@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.IO.Compression;
+using System.Text.Json;
 
 namespace Task5
 {
@@ -24,6 +25,38 @@ namespace Task5
             {
                 var result = reader.ReadToEnd();
                 Console.WriteLine(result);
+            }
+
+            string jsonFilePath = "user.json";
+            string compressedFilePath = "user.json.gz";
+
+            try
+            {
+                if (!File.Exists(jsonFilePath))
+                {
+                    throw new IOException("File with such path does not exist");
+                }
+
+                using (FileStream originalFileStream = File.OpenRead(jsonFilePath))
+                {
+                    using (FileStream compressedFileStream = File.Create(compressedFilePath))
+                    {
+                        using (GZipStream compressionStream = new GZipStream(compressedFileStream, CompressionMode.Compress))
+                        {
+                            originalFileStream.CopyTo(compressionStream);
+                        }
+                    }
+                }
+
+                Console.WriteLine("File compressed successfully.");
+            }
+            catch(IOException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }
